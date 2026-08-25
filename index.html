@@ -52,27 +52,16 @@
             background-color: #b20710;
         }
 
+        /* Bloque de reseña superior original */
         .intro-banner {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 20px;
             margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 25px;
         }
 
-        .intro-img {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid var(--accent-red);
-            flex-shrink: 0;
-        }
-
-        .intro-text h3 {
+        .intro-banner h3 {
             color: var(--accent-red);
             margin-top: 0;
             font-size: 1.1rem;
@@ -80,18 +69,11 @@
             letter-spacing: 1px;
         }
 
-        .intro-text p {
+        .intro-banner p {
             color: var(--text-muted);
             font-size: 0.95rem;
             line-height: 1.5;
             margin: 0;
-        }
-
-        @media (max-width: 768px) {
-            .intro-banner {
-                flex-direction: column;
-                text-align: center;
-            }
         }
 
         .container {
@@ -173,6 +155,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            min-height: 400px;
         }
 
         iframe {
@@ -193,26 +176,23 @@
 </head>
 <body>
 
-    <!-- Cabecera con Logo -->
+    <!-- Cabecera -->
     <header>
         <div class="logo">
-            <img src="logo.jpg" alt="Marquesi Logo" onerror="this.outerHTML='<span style=\'font-size: 1.8rem; font-weight: bold; color: white;\'>MARQUESI</span>'">
+            <img src="logo.jpg" alt="Marquesi" onerror="this.outerHTML='<span style=\'font-size: 1.8rem; font-weight: bold; color: white;\'>MARQUESI</span>'">
         </div>
         <a href="https://paypal.com" target="_blank" class="paypal-btn">☕ Apoyar Proyecto (PayPal)</a>
     </header>
 
-    <!-- Banner Superior (Foto marquesi.jpg y Reseña) -->
+    <!-- Reseña Audiovisual Superior -->
     <section class="intro-banner">
-        <img src="marquesi.jpg" alt="Marquesi" class="intro-img" onerror="this.style.display='none'">
-        <div class="intro-text">
-            <h3>Sobre el Universo Audiovisual</h3>
-            <p><strong>Marquesi, un mundo de poesía-canción</strong> es un universo audiovisual dedicado a descubrir, recordar, celebrar y compartir la riqueza de la música en todas sus expresiones. Con más de 1.400 producciones, su catálogo reúne contenidos sobre grandes artistas nacionales e internacionales, géneros musicales, poesía, canciones, cultura y temas de actualidad. Del jazz al fado, de la bossa nova al tango, y de las más diversas tradiciones sonoras del mundo, Marquesi ofrece una experiencia abierta, apasionada y sin fronteras.</p>
-        </div>
+        <h3>Sobre el Universo Audiovisual</h3>
+        <p><strong>Marquesi, un mundo de poesía-canción</strong> es un universo audiovisual dedicado a descubrir, recordar, celebrar y compartir la riqueza de la música en todas sus expresiones. Con más de 1.400 producciones, su catálogo reúne contenidos sobre grandes artistas nacionales e internacionales, géneros musicales, poesía, canciones, cultura y temas de actualidad. Del jazz al fado, de la bossa nova al tango, y de las más diversas tradiciones sonoras del mundo, Marquesi ofrece una experiencia abierta, apasionada y sin fronteras.</p>
     </section>
 
     <!-- Contenido Principal -->
     <div class="container">
-        <!-- Panel Izquierdo: Buscador y Listado -->
+        <!-- Panel Izquierdo -->
         <div class="sidebar">
             <h3>🔍 Buscar Producción</h3>
             <input type="text" id="searchInput" placeholder="Ej. Paquito, Osito, Pedro..." oninput="filterTracks()">
@@ -220,7 +200,7 @@
 
             <h3>Selección Rápida (A-Z)</h3>
             <ul id="tracksList" class="results-list">
-                <!-- Se llena dinámicamente -->
+                <!-- Dinámico -->
             </ul>
         </div>
 
@@ -234,7 +214,7 @@
     <script>
         let allTracks = [];
 
-        // Cargar el JSON masivo
+        // Cargar archivo JSON completo
         fetch('rockola_data.json')
             .then(response => response.json())
             .then(data => {
@@ -247,7 +227,7 @@
                 document.getElementById('counterBadge').innerText = 'Error al cargar el catálogo.';
             });
 
-        // Mostrar listado
+        // Mostrar listado en pantalla
         function displayTracks(tracks) {
             const listElement = document.getElementById('tracksList');
             listElement.innerHTML = '';
@@ -262,7 +242,7 @@
             });
         }
 
-        // Buscador flexible (.includes para buscar cualquier palabra o fragmento)
+        // Búsqueda flexible .includes
         function filterTracks() {
             const query = document.getElementById('searchInput').value.toLowerCase().trim();
             
@@ -279,7 +259,7 @@
             displayTracks(filtered);
         }
 
-        // Reproductor de video
+        // Reproductor de YouTube
         function playTrack(track) {
             const playerArea = document.getElementById('playerArea');
             playerArea.innerHTML = `

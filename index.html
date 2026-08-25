@@ -125,7 +125,7 @@
 
         .container {
             display: grid;
-            grid-template-columns: 350px 1fr;
+            grid-template-columns: 360px 1fr;
             gap: 20px;
         }
 
@@ -148,6 +148,7 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 12px;
+            margin-top: 15px;
         }
 
         h3 {
@@ -196,24 +197,40 @@
         .counter-badge {
             font-size: 0.82rem;
             color: var(--text-muted);
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             display: block;
         }
 
-        /* Listas con Scroll (Catálogo y Cola) */
+        /* Listas con Scroll Independiente y Barra Cursora Elegante */
         .results-list, .queue-list {
-            max-height: 220px;
+            max-height: 200px;
             overflow-y: auto;
             list-style: none;
             padding: 0;
-            margin: 0 0 15px 0;
+            margin: 0;
             border: 1px solid var(--border-color);
             border-radius: 6px;
             background: #121212;
         }
 
+        /* Personalización de la barra cursora (scroll) para navegadores modernos */
+        .results-list::-webkit-scrollbar, .queue-list::-webkit-scrollbar {
+            width: 8px;
+        }
+        .results-list::-webkit-scrollbar-track, .queue-list::-webkit-scrollbar-track {
+            background: #121212;
+            border-radius: 6px;
+        }
+        .results-list::-webkit-scrollbar-thumb, .queue-list::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 6px;
+        }
+        .results-list::-webkit-scrollbar-thumb:hover, .queue-list::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-red);
+        }
+
         .results-list li, .queue-list li {
-            padding: 10px 12px;
+            padding: 9px 12px;
             border-bottom: 1px solid var(--border-color);
             cursor: pointer;
             transition: background 0.2s, color 0.2s;
@@ -233,30 +250,33 @@
         }
 
         .queue-list li.active-queue-item {
-            background-color: #1a0505;
+            background-color: #1c0606;
             color: var(--accent-red);
             border-left: 3px solid var(--accent-red);
             font-weight: bold;
         }
 
         .action-btn {
-            background: #333;
-            color: white;
-            border: none;
+            background: #2a2a2a;
+            color: #ddd;
+            border: 1px solid #444;
             padding: 3px 8px;
             border-radius: 4px;
             font-size: 0.75rem;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.2s;
         }
 
         .action-btn:hover {
             background: var(--accent-red);
+            color: white;
+            border-color: var(--accent-red);
         }
 
         /* Controles de Cola */
         .queue-box {
             border-top: 1px solid var(--border-color);
+            margin-top: 15px;
             padding-top: 15px;
         }
 
@@ -347,7 +367,7 @@
         <img src="marquesi.jpg" alt="Marquesi" class="hero-avatar" onerror="this.src='https://via.placeholder.com/95?text=M'">
         <div class="hero-content">
             <h3>Sobre el Universo Audiovisual</h3>
-            <p><strong>Marquesi, un mundo de poesía-canción</strong> es un universo audiovisual dedicado a descubrir, recordar, celebrar y compartir la riqueza de la música en todas ses expresiones. Nuestro catálogo reúne contenidos sobre grandes artistas nacionales e internacionales, géneros musicales, poesía, canciones, cultura y temas de actualidad.</p>
+            <p><strong>Marquesi, un mundo de poesía-canción</strong> es un universo audiovisual dedicado a descubrir, recordar, celebrar y compartir la riqueza de la música en todas sus expresiones. Nuestro catálogo reúne contenidos sobre grandes artistas nacionales e internacionales, géneros musicales, poesía, canciones, cultura y temas de actualidad.</p>
             <div class="hero-links">
                 <a href="https://www.youtube.com/@marquesipoesias1000" target="_blank" rel="noopener noreferrer">📺 Canal de YouTube</a>
                 <a href="mailto:cursoediciones@gmail.com">✉️ cursoediciones@gmail.com</a>
@@ -371,7 +391,7 @@
                 <!-- Dinámico -->
             </ul>
 
-            <!-- Cola de Reproducción Interactiva con su propia lista visual -->
+            <!-- Cola de Reproducción Interactiva con Scroll y Barra Cursora -->
             <div class="queue-box">
                 <div class="queue-title">
                     <span>🎵 Cola de Reproducción</span>
@@ -434,7 +454,6 @@
         // Alternar orden A-Z / Z-A
         function toggleSortOrder() {
             isAscending = !isAscending;
-            document.getElementById('sortToggleBtnलेक्ट्रisch' in window || true).innerText = isAscending ? "Orden: A-Z" : "Orden: Z-A";
             document.getElementById('sortToggleBtn').innerText = isAscending ? "Orden: A-Z" : "Orden: Z-A";
             sortAndApplyTracks();
         }
@@ -458,7 +477,7 @@
                 return;
             }
 
-            const limitTracks = tracks.slice(0, 250);
+            const limitTracks = tracks.slice(0, 300);
 
             limitTracks.forEach((track) => {
                 const li = document.createElement('li');
@@ -467,7 +486,8 @@
                 spanText.style.flex = "1";
                 spanText.style.cursor = "pointer";
                 spanText.textContent = track.artist;
-                spanText.onclick = () => playSingleTrackNow(track);
+                // Clic directo reproduce de inmediato sin tocar la cola principal si está inactiva
+                spanText.onclick = () => playDirect(track);
 
                 const addBtn = document.createElement('button');
                 addBtn.className = 'action-btn';
@@ -501,29 +521,33 @@
             displayTracks(displayedTracks);
         }
 
-        // Reproducir de inmediato (reemplaza la cola con este tema y arranca)
-        function playSingleTrackNow(track) {
-            playQueue = [track];
-            queueIndex = 0;
+        // Reproducir una canción directamente al hacer clic en su nombre
+        function playDirect(track) {
+            // Verificamos si ya está en la cola para sincronizar el índice, si no, la insertamos temporalmente
+            let existingIdx = playQueue.findIndex(t => t.id === track.id);
+            if (existingIdx !== -1) {
+                queueIndex = existingIdx;
+            } else {
+                playQueue.push(track);
+                queueIndex = playQueue.length - 1;
+            }
             loadYouTubePlayer(track.id);
             updateQueueUI();
         }
 
-        // Añadir a la cola en cualquier momento (incluso si está vacía o sonando)
+        // Añadir a la cola sin interrumpir lo que suena
         function addToQueue(track) {
             playQueue.push(track);
-            // Si no hay nada reproduciéndose activamente, arrancamos de inmediato con este tema
-            if (queueIndex === -1 || !ytPlayer) {
-                queueIndex = playQueue.length - 1;
+            if (queueIndex === -1 && (!ytPlayer || playQueue.length === 1)) {
+                queueIndex = 0;
                 loadYouTubePlayer(track.id);
             }
             updateQueueUI();
         }
 
-        // Iniciar reproducción de toda la cola acumulada
+        // Iniciar reproducción de la cola completa acumulada
         function playQueueStart() {
             if (playQueue.length === 0) {
-                // Si la cola está vacía, cargamos los elementos visibles actuales de la búsqueda
                 playQueue = [...displayedTracks];
             }
             if (playQueue.length > 0) {
@@ -556,14 +580,14 @@
             updateQueueUI();
         }
 
-        // Cuando el video finaliza, pasa automáticamente al siguiente en la cola
+        // Cuando el video finaliza (estado 0), pasa automáticamente al siguiente
         function onPlayerStateChange(event) {
             if (event.data === YT.PlayerState.ENDED) {
                 playNext();
             }
         }
 
-        // Navegación en la cola
+        // Navegación segura en la cola
         function playNext() {
             if (playQueue.length === 0) return;
             queueIndex = (queueIndex + 1) % playQueue.length;
@@ -596,7 +620,7 @@
             `;
         }
 
-        // Actualizar la interfaz y la lista visual de la cola de reproducción
+        // Actualizar la interfaz y la lista visual interactiva de la cola con scroll
         function updateQueueUI() {
             const count = playQueue.length;
             document.getElementById('queueCount').textContent = `${count} en fila`;
@@ -639,7 +663,7 @@
             });
         }
 
-        // Quitar un elemento individual de la cola
+        // Quitar un elemento individual de la cola sin romper los índices
         function removeFromQueue(index) {
             playQueue.splice(index, 1);
             if (index === queueIndex) {

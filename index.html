@@ -52,7 +52,7 @@
             background-color: #b20710;
         }
 
-        /* Sección de Presentación / Reseña */
+        /* Sección de Reseña / Perfil */
         .hero-section {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -83,9 +83,21 @@
 
         .hero-content p {
             color: var(--text-muted);
-            margin: 0;
+            margin: 0 0 10px 0;
             font-size: 0.95rem;
             line-height: 1.5;
+        }
+
+        .hero-links a {
+            color: var(--accent-red);
+            text-decoration: none;
+            font-weight: 600;
+            margin-right: 15px;
+            font-size: 0.9rem;
+        }
+
+        .hero-links a:hover {
+            text-decoration: underline;
         }
 
         @media (max-width: 768px) {
@@ -147,15 +159,16 @@
         }
 
         .results-list {
-            max-height: 420px;
+            max-height: 320px;
             overflow-y: auto;
             list-style: none;
             padding: 0;
             margin: 0;
+            margin-bottom: 20px;
         }
 
         .results-list li {
-            padding: 12px;
+            padding: 10px;
             border-bottom: 1px solid var(--border-color);
             cursor: pointer;
             transition: background 0.2s, color 0.2s;
@@ -167,6 +180,57 @@
             color: var(--accent-red);
         }
 
+        /* Controles de Cola de Reproducción */
+        .queue-box {
+            border-top: 1px solid var(--border-color);
+            padding-top: 15px;
+        }
+
+        .queue-title {
+            font-size: 0.85rem;
+            color: var(--accent-red);
+            text-transform: uppercase;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .queue-current {
+            font-size: 0.9rem;
+            color: var(--text-main);
+            background: #222;
+            padding: 8px;
+            border-radius: 4px;
+            margin-bottom: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .queue-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .q-btn {
+            background: #222;
+            color: white;
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+            transition: background 0.2s;
+        }
+
+        .q-btn:hover {
+            background: var(--accent-red);
+            border-color: var(--accent-red);
+        }
+
         .player-container {
             text-align: center;
             padding: 20px;
@@ -176,7 +240,7 @@
             align-items: center;
         }
 
-        /* Reproductor optimizado y amplio */
+        /* Reproductor amplio */
         .video-wrapper {
             position: relative;
             width: 100%;
@@ -206,26 +270,30 @@
 </head>
 <body>
 
-    <!-- Header usando logo.jpg -->
+    <!-- Header con logo.jpg y PayPal corregido -->
     <header>
         <div class="logo">
             <img src="logo.jpg" alt="Marquesi Logo" onerror="this.style.display='none'; document.getElementById('fallback-logo').style.display='block';">
             <span id="fallback-logo" style="display:none; font-size: 1.5rem; font-weight: bold; color: white;">MARQUESI</span>
         </div>
-        <a href="https://paypal.com" target="_blank" class="paypal-btn" rel="noopener noreferrer">☕ Apoyar Proyecto (PayPal)</a>
+        <a href="https://paypal.me/spilimcurso" target="_blank" class="paypal-btn" rel="noopener noreferrer">☕ Apoyar Proyecto (PayPal)</a>
     </header>
 
-    <!-- Reseña usando marquesi.jpg -->
+    <!-- Reseña enriquecida con contacto y YouTube -->
     <section class="hero-section">
         <img src="marquesi.jpg" alt="Marquesi" class="hero-avatar" onerror="this.src='https://via.placeholder.com/90?text=M'">
         <div class="hero-content">
             <h3>Sobre el Universo Audiovisual</h3>
-            <p><strong>Marquesi, un mundo de poesía-canción</strong> es un universo audiovisual dedicado a descubrir, recordar, celebrar y compartir la riqueza de la música en todas sus expresiones. Con más de 1.400 producciones, nuestro catálogo reúne contenidos sobre grandes artistas nacionales e internacionales, géneros musicales, poesía, canciones, cultura y temas de actualidad.</p>
+            <p><strong>Marquesi, un mundo de poesía-canción</strong> es un universo audiovisual dedicado a descubrir, recordar, celebrar y compartir la riqueza de la música en todas sus expresiones. Nuestro catálogo reúne contenidos sobre grandes artistas nacionales e internacionales, géneros musicales, poesía, canciones, cultura y temas de actualidad.</p>
+            <div class="hero-links">
+                <a href="https://www.youtube.com/@marquesipoesias1000" target="_blank" rel="noopener noreferrer">📺 Canal de YouTube</a>
+                <a href="mailto:cursoediciones@gmail.com">✉️ cursoediciones@gmail.com</a>
+            </div>
         </div>
     </section>
 
     <div class="container">
-        <!-- Panel Izquierdo: Buscador y Listado -->
+        <!-- Panel Izquierdo: Buscador, Lista Completa A-Z y Cola -->
         <div class="sidebar">
             <h3>🔍 Buscar Producción</h3>
             <input type="text" id="searchInput" placeholder="Ej. Paquito, Osito, Pedro..." oninput="filterTracks()">
@@ -233,15 +301,30 @@
 
             <h3>Selección Rápida</h3>
             <ul id="tracksList" class="results-list">
-                <!-- Se llena dinámicamente con JavaScript -->
+                <!-- Se llena dinámicamente -->
             </ul>
+
+            <!-- Cola de Reproducción Interactiva -->
+            <div class="queue-box">
+                <div class="queue-title">
+                    <span>🎵 Cola de Reproducción</span>
+                    <span id="queueCount">0 en fila</span>
+                </div>
+                <div id="currentPlayingIndicator" class="queue-current">Ninguna producción seleccionada</div>
+                <div class="queue-controls">
+                    <button class="q-btn" onclick="playPrevious()">⏮ Atrás</button>
+                    <button class="q-btn" onclick="playNext()">Siguiente ⏭</button>
+                    <button class="q-btn" onclick="playRandom()">▶ Iniciar</button>
+                    <button class="q-btn" onclick="resetQueue()">⟲ Resetear</button>
+                </div>
+            </div>
         </div>
 
         <!-- Panel Derecho: Reproductor -->
         <div class="main-content player-container">
             <div id="playerArea" style="width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%;">
                 <div style="text-align: center; padding: 40px;">
-                    <h2 style="color: var(--text-main); margin-bottom: 10px;">Bienvenido a La Rockola de Marquesi</h2>
+                    <h2 style="color: var(--text-main); margin-bottom: 10px;">La Rockola de Marquesi</h2>
                     <p class="welcome-msg">Selecciona una producción de la izquierda para comenzar a reproducir.</p>
                 </div>
             </div>
@@ -250,33 +333,36 @@
 
     <script>
         let allTracks = [];
+        let displayedTracks = [];
+        let currentIndex = -1;
 
-        // Cargar rockola_data.json automáticamente
+        // Cargar rockola_data.json asegurando orden alfabético completo A-Z
         fetch('rockola_data.json')
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('No se pudo cargar el catálogo de canciones.');
+                    throw new Error('No se pudo cargar el catálogo.');
                 }
                 return response.json();
             })
             .then(data => {
-                // Ordenar rigurosamente en orden alfabético por artista
+                // Ordenamiento alfabético robusto (A-Z) de todo el catálogo
                 allTracks = data.sort((a, b) => {
-                    const artistA = (a.artist || "").toLowerCase();
-                    const artistB = (b.artist || "").toLowerCase();
+                    const artistA = (a.artist || "").trim().toLowerCase();
+                    const artistB = (b.artist || "").trim().toLowerCase();
                     return artistA.localeCompare(artistB);
                 });
 
+                displayedTracks = [...allTracks];
                 document.getElementById('counterBadge').innerText = `Total en catálogo: ${allTracks.length} producciones`;
-                displayTracks(allTracks);
+                displayTracks(displayedTracks);
             })
             .catch(error => {
                 console.error('Error al cargar el archivo JSON:', error);
                 document.getElementById('counterBadge').innerText = 'Error al cargar el catálogo.';
-                document.getElementById('tracksList').innerHTML = '<li style="color: #e50914; cursor: default;">Verifica que rockola_data.json esté en el mismo repositorio.</li>';
+                document.getElementById('tracksList').innerHTML = '<li style="color: #e50914; cursor: default;">Verifica rockola_data.json</li>';
             });
 
-        // Mostrar listado en pantalla
+        // Mostrar listado paginado/limitado para rendimiento ágil
         function displayTracks(tracks) {
             const listElement = document.getElementById('tracksList');
             listElement.innerHTML = '';
@@ -286,37 +372,44 @@
                 return;
             }
 
-            const limitTracks = tracks.slice(0, 150);
+            const limitTracks = tracks.slice(0, 200); // Muestra hasta 200 ordenados alfabéticamente
 
-            limitTracks.forEach(track => {
+            limitTracks.forEach((track, index) => {
                 const li = document.createElement('li');
                 li.textContent = track.artist;
-                li.onclick = () => playTrack(track);
+                li.onclick = () => selectAndPlay(tracks, index);
                 listElement.appendChild(li);
             });
         }
 
-        // Filtro flexible
+        // Búsqueda en tiempo real que barre todo el catálogo
         function filterTracks() {
             const query = document.getElementById('searchInput').value.toLowerCase().trim();
             
             if (query === "") {
+                displayedTracks = [...allTracks];
                 document.getElementById('counterBadge').innerText = `Total en catálogo: ${allTracks.length} producciones`;
-                displayTracks(allTracks);
+                displayTracks(displayedTracks);
                 return;
             }
 
-            const filtered = allTracks.filter(track => {
+            displayedTracks = allTracks.filter(track => {
                 const artistMatch = track.artist && track.artist.toLowerCase().includes(query);
                 const titleMatch = track.title && track.title.toLowerCase().includes(query);
                 return artistMatch || titleMatch;
             });
 
-            document.getElementById('counterBadge').innerText = `Encontrados: ${filtered.length} resultados`;
-            displayTracks(filtered);
+            document.getElementById('counterBadge').innerText = `Encontrados: ${displayedTracks.length} resultados`;
+            displayTracks(displayedTracks);
         }
 
-        // Reproducir video limpio sin texto superior y con tamaño optimizado
+        // Seleccionar y reproducir pista
+        function selectAndPlay(list, index) {
+            currentIndex = index;
+            const track = list[currentIndex];
+            playTrack(track);
+        }
+
         function playTrack(track) {
             const playerArea = document.getElementById('playerArea');
             playerArea.innerHTML = '';
@@ -331,6 +424,47 @@
 
             wrapper.appendChild(iframe);
             playerArea.appendChild(wrapper);
+
+            // Actualizar panel inferior de cola
+            document.getElementById('currentPlayingIndicator').textContent = track.artist;
+            document.getElementById('queueCount').textContent = `${displayedTracks.length} en fila`;
+        }
+
+        // Controles de la cola
+        function playNext() {
+            if (displayedTracks.length === 0) return;
+            currentIndex = (currentIndex + 1) % displayedTracks.length;
+            selectAndPlay(displayedTracks, currentIndex);
+        }
+
+        function playPrevious() {
+            if (displayedTracks.length === 0) return;
+            currentIndex = (currentIndex - 1 + displayedTracks.length) % displayedTracks.length;
+            selectAndPlay(displayedTracks, currentIndex);
+        }
+
+        function playRandom() {
+            if (displayedTracks.length === 0) return;
+            currentIndex = Math.floor(Math.random() * displayedTracks.length);
+            selectAndPlay(displayedTracks, currentIndex);
+        }
+
+        function resetQueue() {
+            currentIndex = -1;
+            document.getElementById('searchInput').value = '';
+            displayedTracks = [...allTracks];
+            displayTracks(displayedTracks);
+            document.getElementById('counterBadge').innerText = `Total en catálogo: ${allTracks.length} producciones`;
+            document.getElementById('currentPlayingIndicator').textContent = 'Ninguna producción seleccionada';
+            document.getElementById('queueCount').textContent = `${allTracks.length} en fila`;
+            
+            // Restaurar pantalla de bienvenida
+            document.getElementById('playerArea').innerHTML = `
+                <div style="text-align: center; padding: 40px;">
+                    <h2 style="color: var(--text-main); margin-bottom: 10px;">La Rockola de Marquesi</h2>
+                    <p class="welcome-msg">Selecciona una producción de la izquierda para comenzar a reproducir.</p>
+                </div>
+            `;
         }
     </script>
 </body>

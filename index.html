@@ -51,6 +51,49 @@
             background-color: #b20710;
         }
 
+        /* Sección Superior: Imagen y Reseña */
+        .intro-banner {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .intro-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--accent-red);
+            flex-shrink: 0;
+        }
+
+        .intro-text h3 {
+            color: var(--accent-red);
+            margin-top: 0;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .intro-text p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .intro-banner {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
         .container {
             display: grid;
             grid-template-columns: 320px 1fr;
@@ -87,7 +130,7 @@
             color: white;
             font-size: 1rem;
             box-sizing: border-box;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         input[type="text"]:focus {
@@ -126,6 +169,10 @@
         .player-container {
             text-align: center;
             padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
         iframe {
@@ -140,20 +187,32 @@
         .welcome-msg {
             color: var(--text-muted);
             font-size: 1.1rem;
-            margin-top: 20px;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
 
+    <!-- Cabecera -->
     <header>
         <div class="logo">
-            <!-- Asegúrate de tener tu logo o ajusta la ruta si es necesario -->
-            <span style="font-size: 1.5rem; font-weight: bold; color: white;">MARQUESI</span>
+            <!-- Si tienes la imagen del logo en el repositorio, puedes usar <img src="logo.png" alt="Marquesi"> -->
+            <span style="font-size: 1.8rem; font-weight: bold; color: white; letter-spacing: 2px;">MARQUESI</span>
         </div>
         <a href="https://paypal.com" target="_blank" class="paypal-btn">☕ Apoyar Proyecto (PayPal)</a>
     </header>
 
+    <!-- Banner Superior (Foto y Reseña) -->
+    <section class="intro-banner">
+        <!-- Asegúrate de cambiar "perfil.jpg" por el nombre exacto de tu foto si está en el repositorio, o usa una URL directa -->
+        <img src="perfil.jpg" alt="Marquesi" class="intro-img" onerror="this.style.display='none'">
+        <div class="intro-text">
+            <h3>Sobre el Universo Audiovisual</h3>
+            <p><strong>Marquesi, un mundo de poesía-canción</strong> es un universo audiovisual dedicado a descubrir, recordar, celebrar y compartir la riqueza de la música en todas sus expresiones. Con más de 1.400 producciones, su catálogo reúne contenidos sobre grandes artistas nacionales e internacionales, géneros musicales, poesía, canciones, cultura y temas de actualidad. Del jazz al fado, de la bossa nova al tango, y de las más diversas tradiciones sonoras del mundo, Marquesi ofrece una experiencia abierta, apasionada y sin fronteras.</p>
+        </div>
+    </section>
+
+    <!-- Contenido Principal -->
     <div class="container">
         <!-- Panel Izquierdo: Buscador y Listado -->
         <div class="sidebar">
@@ -161,25 +220,23 @@
             <input type="text" id="searchInput" placeholder="Ej. Paquito, Osito, Pedro..." oninput="filterTracks()">
             <span id="counterBadge" class="counter-badge">Cargando catálogo...</span>
 
-            <h3>Selección Rápida</h3>
+            <h3>Selección Rápida (A-Z)</h3>
             <ul id="tracksList" class="results-list">
-                <!-- Se llena dinámicamente con JavaScript -->
+                <!-- Se llena dinámicamente -->
             </ul>
         </div>
 
         <!-- Panel Derecho: Reproductor -->
-        <div class="main-content player-container">
-            <div id="playerArea">
-                <h2 style="color: var(--text-main);">Bienvenido a La Rockola de Marquesi</h2>
-                <p class="welcome-msg">Selecciona una producción de la izquierda para comenzar a reproducir.</p>
-            </div>
+        <div class="main-content player-container" id="playerArea">
+            <h2 style="color: var(--text-main); margin: 0;">Bienvenido a La Rockola de Marquesi</h2>
+            <p class="welcome-msg">Selecciona una producción de la izquierda para comenzar a reproducir.</p>
         </div>
     </div>
 
     <script>
         let allTracks = [];
 
-        // Cargar el archivo rockola_data.json automáticamente
+        // Cargar el JSON masivo
         fetch('rockola_data.json')
             .then(response => response.json())
             .then(data => {
@@ -192,12 +249,11 @@
                 document.getElementById('counterBadge').innerText = 'Error al cargar el catálogo.';
             });
 
-        // Mostrar listado en pantalla
+        // Mostrar listado
         function displayTracks(tracks) {
             const listElement = document.getElementById('tracksList');
             listElement.innerHTML = '';
 
-            // Mostrar un límite razonable en pantalla para que la página vuele (ej. los primeros 150 resultados de la búsqueda)
             const limitTracks = tracks.slice(0, 150);
 
             limitTracks.forEach(track => {
@@ -208,7 +264,7 @@
             });
         }
 
-        // Filtro flexible con includes (Detecta cualquier palabra, fragmento o apóstrofe)
+        // Buscador flexible (con .includes)
         function filterTracks() {
             const query = document.getElementById('searchInput').value.toLowerCase().trim();
             
@@ -225,11 +281,11 @@
             displayTracks(filtered);
         }
 
-        // Reproducir video seleccionado en el panel derecho
+        // Reproductor de video
         function playTrack(track) {
             const playerArea = document.getElementById('playerArea');
             playerArea.innerHTML = `
-                <h3 style="margin-bottom: 15px; color: var(--text-main);">${track.artist}</h3>
+                <h3 style="margin-bottom: 15px; color: var(--text-main); text-align: center;">${track.artist}</h3>
                 <iframe src="https://www.youtube.com/embed/${track.id}?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             `;
         }

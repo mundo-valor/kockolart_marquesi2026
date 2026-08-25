@@ -110,6 +110,7 @@
             object-fit: cover;
             border: 3px solid var(--accent-red);
             flex-shrink: 0;
+            background-color: #27272a;
         }
 
         .bio-content h2 {
@@ -432,9 +433,9 @@
         </a>
     </header>
 
-    <!-- Sección de Reseña e Imagen de Marquesi -->
+    <!-- Sección de Reseña e Imagen de Marquesi con blindaje contra loops -->
     <section class="bio-banner">
-        <img src="marquesi.jpg" alt="Marquesi" class="bio-image" onerror="this.src='https://via.placeholder.com/140?text=Marquesi'">
+        <img src="marquesi.jpg" alt="Marquesi" class="bio-image" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'140\' height=\'140\'><rect width=\'100%\' height=\'100%\' fill=\'%2327272a\'/><text x=\'50%\' y=\'50%\' fill=\'%23a1a1aa\' font-family=\'sans-serif\' font-size=\'14\' dominant-baseline=\'middle\' text-anchor=\'middle\'>Marquesi</text></svg>';">
         <div class="bio-content">
             <h2>Sobre el Universo Audiovisual</h2>
             <p><strong>Marquesi, un mundo de poesía-canción</strong> es un universo audiovisual dedicado a descubrir, recordar, celebrar y compartir la riqueza de la música en todas sus expresiones. Con más de 1.400 producciones, su catálogo reúne contenidos sobre grandes artistas nacionales e internacionales, géneros musicales, poesía, canciones, cultura y temas de actualidad. Del jazz al fado, de la bossa nova al tango, y de las más diversas tradiciones sonoras del mundo, Marquesi ofrece una experiencia abierta, apasionada y sin fronteras.</p>
@@ -489,7 +490,6 @@
         let tracksData = [];
         let playbackQueue = [];
         let currentQueueIndex = 0;
-        let currentIframe = null;
 
         document.addEventListener("DOMContentLoaded", () => {
             fetch('rockola_data.json')

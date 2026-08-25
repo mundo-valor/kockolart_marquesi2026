@@ -52,16 +52,28 @@
             background-color: #b20710;
         }
 
-        /* Bloque de reseña superior original */
+        /* Banner Superior (Foto y Reseña) */
         .intro-banner {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 20px;
             margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 25px;
         }
 
-        .intro-banner h3 {
+        .intro-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--accent-red);
+            flex-shrink: 0;
+        }
+
+        .intro-text h3 {
             color: var(--accent-red);
             margin-top: 0;
             font-size: 1.1rem;
@@ -69,11 +81,18 @@
             letter-spacing: 1px;
         }
 
-        .intro-banner p {
+        .intro-text p {
             color: var(--text-muted);
             font-size: 0.95rem;
             line-height: 1.5;
             margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .intro-banner {
+                flex-direction: column;
+                text-align: center;
+            }
         }
 
         .container {
@@ -128,24 +147,88 @@
         }
 
         .results-list {
-            max-height: 400px;
+            max-height: 300px;
             overflow-y: auto;
             list-style: none;
             padding: 0;
-            margin: 0;
+            margin: 0 0 20px 0;
         }
 
         .results-list li {
-            padding: 10px;
+            padding: 8px 10px;
             border-bottom: 1px solid var(--border-color);
             cursor: pointer;
             transition: background 0.2s;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
 
         .results-list li:hover {
             background-color: #222;
             color: var(--accent-red);
+        }
+
+        /* Controles de Cola y Reproducción */
+        .queue-section {
+            background: #111;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+
+        .queue-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--accent-red);
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .queue-list {
+            max-height: 120px;
+            overflow-y: auto;
+            list-style: none;
+            padding: 0;
+            margin: 0 0 10px 0;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .queue-list li {
+            padding: 4px 0;
+            border-bottom: 1px solid #222;
+        }
+
+        .control-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .btn {
+            background-color: #222;
+            color: white;
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #333;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-red);
+            border-color: var(--accent-red);
+        }
+
+        .btn-primary:hover {
+            background-color: #b20710;
         }
 
         .player-container {
@@ -155,7 +238,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 400px;
+            min-height: 450px;
         }
 
         iframe {
@@ -184,24 +267,44 @@
         <a href="https://paypal.com" target="_blank" class="paypal-btn">☕ Apoyar Proyecto (PayPal)</a>
     </header>
 
-    <!-- Reseña Audiovisual Superior -->
+    <!-- Banner Superior (Fotografía y Reseña) -->
     <section class="intro-banner">
-        <h3>Sobre el Universo Audiovisual</h3>
-        <p><strong>Marquesi, un mundo de poesía-canción</strong> es un universo audiovisual dedicado a descubrir, recordar, celebrar y compartir la riqueza de la música en todas sus expresiones. Con más de 1.400 producciones, su catálogo reúne contenidos sobre grandes artistas nacionales e internacionales, géneros musicales, poesía, canciones, cultura y temas de actualidad. Del jazz al fado, de la bossa nova al tango, y de las más diversas tradiciones sonoras del mundo, Marquesi ofrece una experiencia abierta, apasionada y sin fronteras.</p>
+        <img src="marquesi.jpg" alt="Marquesi" class="intro-img" onerror="this.style.display='none'">
+        <div class="intro-text">
+            <h3>Sobre el Universo Audiovisual</h3>
+            <p><strong>Marquesi, un mundo de poesía-canción</strong> es un universo audiovisual dedicado a descubrir, recordar, celebrar y compartir la riqueza de la música en todas sus expresiones. Con más de 1.400 producciones, su catálogo reúne contenidos sobre grandes artistas nacionales e internacionales, géneros musicales, poesía, canciones, cultura y temas de actualidad. Del jazz al fado, de la bossa nova al tango, y de las más diversas tradiciones sonoras del mundo, Marquesi ofrece una experiencia abierta, apasionada y sin fronteras.</p>
+        </div>
     </section>
 
     <!-- Contenido Principal -->
     <div class="container">
-        <!-- Panel Izquierdo -->
+        <!-- Panel Izquierdo: Buscador, Lista y Cola -->
         <div class="sidebar">
             <h3>🔍 Buscar Producción</h3>
             <input type="text" id="searchInput" placeholder="Ej. Paquito, Osito, Pedro..." oninput="filterTracks()">
             <span id="counterBadge" class="counter-badge">Cargando catálogo...</span>
 
-            <h3>Selección Rápida (A-Z)</h3>
+            <h3>Selección Rápida</h3>
             <ul id="tracksList" class="results-list">
-                <!-- Dinámico -->
+                <!-- Se llena dinámicamente -->
             </ul>
+
+            <!-- Sección de Cola y Controles -->
+            <div class="queue-section">
+                <div class="queue-header">
+                    <span>🎵 COLA DE REPRODUCCIÓN</span>
+                    <span id="queueCount">0 EN FILA</span>
+                </div>
+                <ul id="queueList" class="queue-list">
+                    <li style="text-align: center; border: none; padding: 10px 0;">La fila está vacía</li>
+                </ul>
+                <div class="control-buttons">
+                    <button class="btn" onclick="prevTrack()">⏮ Atrás</button>
+                    <button class="btn btn-primary" onclick="nextTrack()">Siguiente ⏭</button>
+                    <button class="btn" onclick="startQueue()">▶ Iniciar</button>
+                    <button class="btn btn-primary" style="background-color: #333;" onclick="resetQueue()">🗑 Resetear</button>
+                </div>
+            </div>
         </div>
 
         <!-- Panel Derecho: Reproductor -->
@@ -213,8 +316,10 @@
 
     <script>
         let allTracks = [];
+        let queue = [];
+        let currentIndex = 0;
 
-        // Cargar archivo JSON completo
+        // Cargar el JSON masivo de los 1422 videos
         fetch('rockola_data.json')
             .then(response => response.json())
             .then(data => {
@@ -227,7 +332,7 @@
                 document.getElementById('counterBadge').innerText = 'Error al cargar el catálogo.';
             });
 
-        // Mostrar listado en pantalla
+        // Mostrar listado con opción de agregar a la cola al hacer clic
         function displayTracks(tracks) {
             const listElement = document.getElementById('tracksList');
             listElement.innerHTML = '';
@@ -237,12 +342,13 @@
             limitTracks.forEach(track => {
                 const li = document.createElement('li');
                 li.innerText = track.artist;
-                li.onclick = () => playTrack(track);
+                li.title = "Haz clic para añadir a la cola y reproducir";
+                li.onclick = () => addToQueueAndPlay(track);
                 listElement.appendChild(li);
             });
         }
 
-        // Búsqueda flexible .includes
+        // Buscador flexible (.includes)
         function filterTracks() {
             const query = document.getElementById('searchInput').value.toLowerCase().trim();
             
@@ -259,12 +365,71 @@
             displayTracks(filtered);
         }
 
-        // Reproductor de YouTube
+        // Añadir a la cola y reproducir
+        function addToQueueAndPlay(track) {
+            queue.push(track);
+            currentIndex = queue.length - 1;
+            updateQueueUI();
+            playTrack(queue[currentIndex]);
+        }
+
         function playTrack(track) {
             const playerArea = document.getElementById('playerArea');
             playerArea.innerHTML = `
                 <h3 style="margin-bottom: 15px; color: var(--text-main); text-align: center;">${track.artist}</h3>
                 <iframe src="https://www.youtube.com/embed/${track.id}?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            `;
+        }
+
+        function updateQueueUI() {
+            const queueList = document.getElementById('queueList');
+            document.getElementById('queueCount').innerText = `${queue.length} EN FILA`;
+            
+            if (queue.length === 0) {
+                queueList.innerHTML = `<li style="text-align: center; border: none; padding: 10px 0;">La fila está vacía</li>`;
+                return;
+            }
+
+            queueList.innerHTML = '';
+            queue.forEach((t, idx) => {
+                const li = document.createElement('li');
+                li.innerText = `${idx + 1}. ${t.artist}`;
+                if (idx === currentIndex) li.style.color = 'var(--accent-red)';
+                queueList.appendChild(li);
+            });
+        }
+
+        function nextTrack() {
+            if (queue.length > 0 && currentIndex < queue.length - 1) {
+                currentIndex++;
+                playTrack(queue[currentIndex]);
+                updateQueueUI();
+            }
+        }
+
+        function prevTrack() {
+            if (queue.length > 0 && currentIndex > 0) {
+                currentIndex--;
+                playTrack(queue[currentIndex]);
+                updateQueueUI();
+            }
+        }
+
+        function startQueue() {
+            if (queue.length > 0) {
+                currentIndex = 0;
+                playTrack(queue[currentIndex]);
+                updateQueueUI();
+            }
+        }
+
+        function resetQueue() {
+            queue = [];
+            currentIndex = 0;
+            updateQueueUI();
+            document.getElementById('playerArea').innerHTML = `
+                <h2 style="color: var(--text-main); margin: 0;">Bienvenido a La Rockola de Marquesi</h2>
+                <p class="welcome-msg">Selecciona una producción de la izquierda para comenzar a reproducir.</p>
             `;
         }
     </script>

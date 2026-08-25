@@ -57,7 +57,7 @@
             transform: scale(1.02);
         }
 
-        /* Sección de Reseña / Perfil optimizada */
+        /* Sección de Reseña / Perfil */
         .hero-section {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -200,18 +200,19 @@
             display: block;
         }
 
-        .results-list {
-            max-height: 300px;
+        /* Listas con Scroll (Catálogo y Cola) */
+        .results-list, .queue-list {
+            max-height: 220px;
             overflow-y: auto;
             list-style: none;
             padding: 0;
-            margin: 0 0 20px 0;
+            margin: 0 0 15px 0;
             border: 1px solid var(--border-color);
             border-radius: 6px;
             background: #121212;
         }
 
-        .results-list li {
+        .results-list li, .queue-list li {
             padding: 10px 12px;
             border-bottom: 1px solid var(--border-color);
             cursor: pointer;
@@ -222,16 +223,23 @@
             align-items: center;
         }
 
-        .results-list li:last-child {
+        .results-list li:last-child, .queue-list li:last-child {
             border-bottom: none;
         }
 
-        .results-list li:hover {
+        .results-list li:hover, .queue-list li:hover {
             background-color: #222;
             color: var(--accent-red);
         }
 
-        .add-queue-btn {
+        .queue-list li.active-queue-item {
+            background-color: #1a0505;
+            color: var(--accent-red);
+            border-left: 3px solid var(--accent-red);
+            font-weight: bold;
+        }
+
+        .action-btn {
             background: #333;
             color: white;
             border: none;
@@ -242,11 +250,11 @@
             transition: background 0.2s;
         }
 
-        .add-queue-btn:hover {
+        .action-btn:hover {
             background: var(--accent-red);
         }
 
-        /* Cola de Reproducción */
+        /* Controles de Cola */
         .queue-box {
             border-top: 1px solid var(--border-color);
             padding-top: 15px;
@@ -262,23 +270,11 @@
             margin-bottom: 8px;
         }
 
-        .queue-current {
-            font-size: 0.88rem;
-            color: var(--text-main);
-            background: #222;
-            padding: 8px 10px;
-            border-radius: 6px;
-            margin-bottom: 12px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            border: 1px solid var(--border-color);
-        }
-
         .queue-controls {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 8px;
+            margin-top: 10px;
         }
 
         .q-btn {
@@ -307,7 +303,7 @@
             align-items: center;
         }
 
-        /* Reproductor amplio de gran presencia visual */
+        /* Reproductor amplio */
         .video-wrapper {
             position: relative;
             width: 100%;
@@ -351,7 +347,7 @@
         <img src="marquesi.jpg" alt="Marquesi" class="hero-avatar" onerror="this.src='https://via.placeholder.com/95?text=M'">
         <div class="hero-content">
             <h3>Sobre el Universo Audiovisual</h3>
-            <p><strong>Marquesi, un mundo de poesía-canción</strong> es un universo audiovisual dedicado a descubrir, recordar, celebrar y compartir la riqueza de la música en todas sus expresiones. Nuestro catálogo reúne contenidos sobre grandes artistas nacionales e internacionales, géneros musicales, poesía, canciones, cultura y temas de actualidad.</p>
+            <p><strong>Marquesi, un mundo de poesía-canción</strong> es un universo audiovisual dedicado a descubrir, recordar, celebrar y compartir la riqueza de la música en todas ses expresiones. Nuestro catálogo reúne contenidos sobre grandes artistas nacionales e internacionales, géneros musicales, poesía, canciones, cultura y temas de actualidad.</p>
             <div class="hero-links">
                 <a href="https://www.youtube.com/@marquesipoesias1000" target="_blank" rel="noopener noreferrer">📺 Canal de YouTube</a>
                 <a href="mailto:cursoediciones@gmail.com">✉️ cursoediciones@gmail.com</a>
@@ -375,13 +371,18 @@
                 <!-- Dinámico -->
             </ul>
 
-            <!-- Cola de Reproducción -->
+            <!-- Cola de Reproducción Interactiva con su propia lista visual -->
             <div class="queue-box">
                 <div class="queue-title">
                     <span>🎵 Cola de Reproducción</span>
                     <span id="queueCount">0 en fila</span>
                 </div>
-                <div id="currentPlayingIndicator" class="queue-current">Ninguna producción seleccionada</div>
+                
+                <!-- Lista visual de la cola con scroll -->
+                <ul id="queueList" class="queue-list">
+                    <li style="color: var(--text-muted); cursor: default; justify-content: center;">Cola vacía</li>
+                </ul>
+
                 <div class="queue-controls">
                     <button class="q-btn" onclick="playPrevious()">⏮ Atrás</button>
                     <button class="q-btn" onclick="playNext()">Siguiente ⏭</button>
@@ -408,10 +409,10 @@
     <script>
         let allTracks = [];
         let displayedTracks = [];
-        let playQueue = [];      // Cola personalizada o lista activa
-        let queueIndex = -1;     // Índice actual en la cola de reproducción
-        let isAscending = true;  // Control de orden A-Z / Z-A
-        let ytPlayer = null;     // Instancia del reproductor de YouTube
+        let playQueue = [];      // Cola de reproducción activa
+        let queueIndex = -1;     // Índice actual en la cola
+        let isAscending = true;  // true = A-Z, false = Z-A
+        let ytPlayer = null;     // Instancia del reproductor
 
         // Cargar archivo JSON
         fetch('rockola_data.json')
@@ -430,9 +431,10 @@
                 document.getElementById('tracksList').innerHTML = '<li style="color: #e50914; cursor: default;">Verifica rockola_data.json</li>';
             });
 
-        // Ordenar catálogo completo A-Z o Z-A
+        // Alternar orden A-Z / Z-A
         function toggleSortOrder() {
             isAscending = !isAscending;
+            document.getElementById('sortToggleBtnलेक्ट्रisch' in window || true).innerText = isAscending ? "Orden: A-Z" : "Orden: Z-A";
             document.getElementById('sortToggleBtn').innerText = isAscending ? "Orden: A-Z" : "Orden: Z-A";
             sortAndApplyTracks();
         }
@@ -446,17 +448,17 @@
             filterTracks();
         }
 
-        // Mostrar listado con botón de añadir a la cola
+        // Mostrar listado principal con botón de añadir
         function displayTracks(tracks) {
             const listElement = document.getElementById('tracksList');
             listElement.innerHTML = '';
 
             if (tracks.length === 0) {
-                listElement.innerHTML = '<li style="color: var(--text-muted); cursor: default;">No se encontraron resultados</li>';
+                listElement.innerHTML = '<li style="color: var(--text-muted); cursor: default; justify-content: center;">No se encontraron resultados</li>';
                 return;
             }
 
-            const limitTracks = tracks.slice(0, 250); // Límite eficiente para UI
+            const limitTracks = tracks.slice(0, 250);
 
             limitTracks.forEach((track) => {
                 const li = document.createElement('li');
@@ -468,7 +470,7 @@
                 spanText.onclick = () => playSingleTrackNow(track);
 
                 const addBtn = document.createElement('button');
-                addBtn.className = 'add-queue-btn';
+                addBtn.className = 'action-btn';
                 addBtn.textContent = '+ Añadir';
                 addBtn.onclick = (e) => {
                     e.stopPropagation();
@@ -499,7 +501,7 @@
             displayTracks(displayedTracks);
         }
 
-        // Reproducir pista inmediata (y establecerla como cola principal si está vacía)
+        // Reproducir de inmediato (reemplaza la cola con este tema y arranca)
         function playSingleTrackNow(track) {
             playQueue = [track];
             queueIndex = 0;
@@ -507,20 +509,22 @@
             updateQueueUI();
         }
 
-        // Añadir pista individual a la cola de reproducción
+        // Añadir a la cola en cualquier momento (incluso si está vacía o sonando)
         function addToQueue(track) {
             playQueue.push(track);
-            if (queueIndex === -1) {
-                queueIndex = 0;
-                loadYouTubePlayer(playQueue[0].id);
+            // Si no hay nada reproduciéndose activamente, arrancamos de inmediato con este tema
+            if (queueIndex === -1 || !ytPlayer) {
+                queueIndex = playQueue.length - 1;
+                loadYouTubePlayer(track.id);
             }
             updateQueueUI();
         }
 
-        // Iniciar reproducción de la cola completa actual
+        // Iniciar reproducción de toda la cola acumulada
         function playQueueStart() {
             if (playQueue.length === 0) {
-                playQueue = [...displayedTracks]; // Si la cola está vacía, toma los filtrados/visibles actuales
+                // Si la cola está vacía, cargamos los elementos visibles actuales de la búsqueda
+                playQueue = [...displayedTracks];
             }
             if (playQueue.length > 0) {
                 queueIndex = 0;
@@ -529,11 +533,11 @@
             }
         }
 
-        // Cargar o cambiar video usando la API de YouTube
+        // Cargar o cambiar video de forma segura en la API de YouTube
         function loadYouTubePlayer(videoId) {
             const playerArea = document.getElementById('playerArea');
             
-            if (!ytPlayer) {
+            if (!ytPlayer || typeof ytPlayer.loadVideoById !== 'function') {
                 playerArea.innerHTML = `
                     <div class="video-wrapper">
                         <div id="youtube-player"></div>
@@ -549,16 +553,17 @@
             } else {
                 ytPlayer.loadVideoById(videoId);
             }
+            updateQueueUI();
         }
 
-        // Evento cuando un video termina (estado 0) -> Pasa automáticamente al siguiente
+        // Cuando el video finaliza, pasa automáticamente al siguiente en la cola
         function onPlayerStateChange(event) {
             if (event.data === YT.PlayerState.ENDED) {
                 playNext();
             }
         }
 
-        // Controles de navegación en la cola
+        // Navegación en la cola
         function playNext() {
             if (playQueue.length === 0) return;
             queueIndex = (queueIndex + 1) % playQueue.length;
@@ -591,14 +596,64 @@
             `;
         }
 
+        // Actualizar la interfaz y la lista visual de la cola de reproducción
         function updateQueueUI() {
             const count = playQueue.length;
             document.getElementById('queueCount').textContent = `${count} en fila`;
-            if (queueIndex >= 0 && playQueue[queueIndex]) {
-                document.getElementById('currentPlayingIndicator').textContent = playQueue[queueIndex].artist;
-            } else {
-                document.getElementById('currentPlayingIndicator').textContent = 'Ninguna producción seleccionada';
+            
+            const queueListEl = document.getElementById('queueList');
+            queueListEl.innerHTML = '';
+
+            if (count === 0) {
+                queueListEl.innerHTML = '<li style="color: var(--text-muted); cursor: default; justify-content: center;">Cola vacía</li>';
+                return;
             }
+
+            playQueue.forEach((track, idx) => {
+                const li = document.createElement('li');
+                if (idx === queueIndex) {
+                    li.className = 'active-queue-item';
+                }
+
+                const span = document.createElement('span');
+                span.style.flex = "1";
+                span.textContent = `${idx + 1}. ${track.artist}`;
+                span.onclick = () => {
+                    queueIndex = idx;
+                    loadYouTubePlayer(track.id);
+                    updateQueueUI();
+                };
+
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'action-btn';
+                removeBtn.textContent = '✕';
+                removeBtn.title = 'Quitar de la cola';
+                removeBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    removeFromQueue(idx);
+                };
+
+                li.appendChild(span);
+                li.appendChild(removeBtn);
+                queueListEl.appendChild(li);
+            });
+        }
+
+        // Quitar un elemento individual de la cola
+        function removeFromQueue(index) {
+            playQueue.splice(index, 1);
+            if (index === queueIndex) {
+                if (playQueue.length > 0) {
+                    queueIndex = queueIndex >= playQueue.length ? 0 : queueIndex;
+                    loadYouTubePlayer(playQueue[queueIndex].id);
+                } else {
+                    resetQueue();
+                    return;
+                }
+            } else if (index < queueIndex) {
+                queueIndex--;
+            }
+            updateQueueUI();
         }
     </script>
 </body>

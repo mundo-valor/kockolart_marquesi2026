@@ -128,22 +128,23 @@
 
         .player-container {
             text-align: center;
-            padding: 40px 20px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
         }
 
+        /* Reproductor con mayor presencia visual */
         .video-wrapper {
             position: relative;
             width: 100%;
-            max-width: 640px;
+            max-width: 900px;
             aspect-ratio: 16 / 9;
             background: #000;
             border-radius: 8px;
             overflow: hidden;
-            margin-top: 15px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
         }
 
         iframe {
@@ -186,9 +187,11 @@
 
         <!-- Panel Derecho: Reproductor -->
         <div class="main-content player-container">
-            <div id="playerArea" style="width: 100%;">
-                <h2 style="color: var(--text-main); margin-bottom: 10px;">Bienvenido a La Rockola de Marquesi</h2>
-                <p class="welcome-msg">Selecciona una producción de la izquierda para comenzar a reproducir.</p>
+            <div id="playerArea" style="width: 100%; display: flex; justify-content: center; align-items: center; height: 100%;">
+                <div style="text-align: center;">
+                    <h2 style="color: var(--text-main); margin-bottom: 10px;">Bienvenido a La Rockola de Marquesi</h2>
+                    <p class="welcome-msg">Selecciona una producción de la izquierda para comenzar a reproducir.</p>
+                </div>
             </div>
         </div>
     </div>
@@ -205,7 +208,13 @@
                 return response.json();
             })
             .then(data => {
-                allTracks = data;
+                // Ordenar alfabéticamente por artista de forma predeterminada
+                allTracks = data.sort((a, b) => {
+                    const artistA = (a.artist || "").toLowerCase();
+                    const artistB = (b.artist || "").toLowerCase();
+                    return artistA.localeCompare(artistB);
+                });
+
                 document.getElementById('counterBadge').innerText = `Total en catálogo: ${allTracks.length} producciones`;
                 displayTracks(allTracks);
             })
@@ -225,7 +234,6 @@
                 return;
             }
 
-            // Mostrar un límite razonable en pantalla para rendimiento óptimo
             const limitTracks = tracks.slice(0, 150);
 
             limitTracks.forEach(track => {
@@ -256,15 +264,10 @@
             displayTracks(filtered);
         }
 
-        // Reproducir video seleccionado en el panel derecho de forma segura
+        // Reproducir video sin texto superior y con un reproductor más amplio
         function playTrack(track) {
             const playerArea = document.getElementById('playerArea');
             playerArea.innerHTML = '';
-
-            const titleHeading = document.createElement('h3');
-            titleHeading.style.marginBottom = '15px';
-            titleHeading.style.color = 'var(--text-main)';
-            titleHeading.textContent = track.artist;
 
             const wrapper = document.createElement('div');
             wrapper.className = 'video-wrapper';
@@ -275,7 +278,6 @@
             iframe.setAttribute('allowfullscreen', 'true');
 
             wrapper.appendChild(iframe);
-            playerArea.appendChild(titleHeading);
             playerArea.appendChild(wrapper);
         }
     </script>

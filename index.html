@@ -33,11 +33,9 @@
             margin-bottom: 20px;
         }
 
-        .logo span {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: white;
-            letter-spacing: 1px;
+        .logo img {
+            height: 45px;
+            display: block;
         }
 
         .paypal-btn {
@@ -52,6 +50,49 @@
 
         .paypal-btn:hover {
             background-color: #b20710;
+        }
+
+        /* Sección de Presentación / Reseña */
+        .hero-section {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px 25px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .hero-avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent-red);
+            flex-shrink: 0;
+        }
+
+        .hero-content h3 {
+            color: var(--accent-red);
+            margin: 0 0 8px 0;
+            font-size: 1.05rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hero-content p {
+            color: var(--text-muted);
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .hero-section {
+                flex-direction: column;
+                text-align: center;
+            }
         }
 
         .container {
@@ -135,7 +176,7 @@
             align-items: center;
         }
 
-        /* Reproductor con mayor presencia visual */
+        /* Reproductor optimizado y amplio */
         .video-wrapper {
             position: relative;
             width: 100%;
@@ -159,18 +200,29 @@
         .welcome-msg {
             color: var(--text-muted);
             font-size: 1.1rem;
-            margin-top: 20px;
+            margin-top: 15px;
         }
     </style>
 </head>
 <body>
 
+    <!-- Header usando logo.jpg -->
     <header>
         <div class="logo">
-            <span>MARQUESI</span>
+            <img src="logo.jpg" alt="Marquesi Logo" onerror="this.style.display='none'; document.getElementById('fallback-logo').style.display='block';">
+            <span id="fallback-logo" style="display:none; font-size: 1.5rem; font-weight: bold; color: white;">MARQUESI</span>
         </div>
         <a href="https://paypal.com" target="_blank" class="paypal-btn" rel="noopener noreferrer">☕ Apoyar Proyecto (PayPal)</a>
     </header>
+
+    <!-- Reseña usando marquesi.jpg -->
+    <section class="hero-section">
+        <img src="marquesi.jpg" alt="Marquesi" class="hero-avatar" onerror="this.src='https://via.placeholder.com/90?text=M'">
+        <div class="hero-content">
+            <h3>Sobre el Universo Audiovisual</h3>
+            <p><strong>Marquesi, un mundo de poesía-canción</strong> es un universo audiovisual dedicado a descubrir, recordar, celebrar y compartir la riqueza de la música en todas sus expresiones. Con más de 1.400 producciones, nuestro catálogo reúne contenidos sobre grandes artistas nacionales e internacionales, géneros musicales, poesía, canciones, cultura y temas de actualidad.</p>
+        </div>
+    </section>
 
     <div class="container">
         <!-- Panel Izquierdo: Buscador y Listado -->
@@ -187,8 +239,8 @@
 
         <!-- Panel Derecho: Reproductor -->
         <div class="main-content player-container">
-            <div id="playerArea" style="width: 100%; display: flex; justify-content: center; align-items: center; height: 100%;">
-                <div style="text-align: center;">
+            <div id="playerArea" style="width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%;">
+                <div style="text-align: center; padding: 40px;">
                     <h2 style="color: var(--text-main); margin-bottom: 10px;">Bienvenido a La Rockola de Marquesi</h2>
                     <p class="welcome-msg">Selecciona una producción de la izquierda para comenzar a reproducir.</p>
                 </div>
@@ -199,7 +251,7 @@
     <script>
         let allTracks = [];
 
-        // Cargar el archivo rockola_data.json automáticamente
+        // Cargar rockola_data.json automáticamente
         fetch('rockola_data.json')
             .then(response => {
                 if (!response.ok) {
@@ -208,7 +260,7 @@
                 return response.json();
             })
             .then(data => {
-                // Ordenar alfabéticamente por artista de forma predeterminada
+                // Ordenar rigurosamente en orden alfabético por artista
                 allTracks = data.sort((a, b) => {
                     const artistA = (a.artist || "").toLowerCase();
                     const artistB = (b.artist || "").toLowerCase();
@@ -244,7 +296,7 @@
             });
         }
 
-        // Filtro flexible con includes
+        // Filtro flexible
         function filterTracks() {
             const query = document.getElementById('searchInput').value.toLowerCase().trim();
             
@@ -264,7 +316,7 @@
             displayTracks(filtered);
         }
 
-        // Reproducir video sin texto superior y con un reproductor más amplio
+        // Reproducir video limpio sin texto superior y con tamaño optimizado
         function playTrack(track) {
             const playerArea = document.getElementById('playerArea');
             playerArea.innerHTML = '';

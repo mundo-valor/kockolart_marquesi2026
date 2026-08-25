@@ -35,6 +35,7 @@
 
         .logo img {
             height: 50px;
+            object-fit: contain;
         }
 
         .paypal-btn {
@@ -51,7 +52,6 @@
             background-color: #b20710;
         }
 
-        /* Sección Superior: Imagen y Reseña */
         .intro-banner {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -193,19 +193,17 @@
 </head>
 <body>
 
-    <!-- Cabecera -->
+    <!-- Cabecera con Logo -->
     <header>
         <div class="logo">
-            <!-- Si tienes la imagen del logo en el repositorio, puedes usar <img src="logo.png" alt="Marquesi"> -->
-            <span style="font-size: 1.8rem; font-weight: bold; color: white; letter-spacing: 2px;">MARQUESI</span>
+            <img src="logo.jpg" alt="Marquesi Logo" onerror="this.outerHTML='<span style=\'font-size: 1.8rem; font-weight: bold; color: white;\'>MARQUESI</span>'">
         </div>
         <a href="https://paypal.com" target="_blank" class="paypal-btn">☕ Apoyar Proyecto (PayPal)</a>
     </header>
 
-    <!-- Banner Superior (Foto y Reseña) -->
+    <!-- Banner Superior (Foto marquesi.jpg y Reseña) -->
     <section class="intro-banner">
-        <!-- Asegúrate de cambiar "perfil.jpg" por el nombre exacto de tu foto si está en el repositorio, o usa una URL directa -->
-        <img src="perfil.jpg" alt="Marquesi" class="intro-img" onerror="this.style.display='none'">
+        <img src="marquesi.jpg" alt="Marquesi" class="intro-img" onerror="this.style.display='none'">
         <div class="intro-text">
             <h3>Sobre el Universo Audiovisual</h3>
             <p><strong>Marquesi, un mundo de poesía-canción</strong> es un universo audiovisual dedicado a descubrir, recordar, celebrar y compartir la riqueza de la música en todas sus expresiones. Con más de 1.400 producciones, su catálogo reúne contenidos sobre grandes artistas nacionales e internacionales, géneros musicales, poesía, canciones, cultura y temas de actualidad. Del jazz al fado, de la bossa nova al tango, y de las más diversas tradiciones sonoras del mundo, Marquesi ofrece una experiencia abierta, apasionada y sin fronteras.</p>
@@ -264,7 +262,7 @@
             });
         }
 
-        // Buscador flexible (con .includes)
+        // Buscador flexible (.includes para buscar cualquier palabra o fragmento)
         function filterTracks() {
             const query = document.getElementById('searchInput').value.toLowerCase().trim();
             

@@ -42,34 +42,15 @@
         .header-brand {
             display: flex;
             align-items: center;
-            gap: 20px;
         }
 
+        /* Logo ampliado y limpio sin texto duplicado */
         .header-logo {
-            height: 65px;
+            height: 85px;
             width: auto;
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
+            border-radius: 8px;
             object-fit: contain;
-            background-color: #000;
-        }
-
-        .header-titles h1 {
-            color: var(--text-main);
-            font-size: 1.5rem;
-            letter-spacing: 0.5px;
-            margin-bottom: 2px;
-        }
-
-        .header-titles h1 span {
-            color: var(--accent-red);
-        }
-
-        .header-titles p {
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            text-transform: none; /* Mantiene minúsculas/mayúsculas exactas */
-            letter-spacing: 0.5px;
+            background-color: transparent;
         }
 
         .donate-btn {
@@ -138,9 +119,6 @@
                 flex-direction: column;
                 text-align: center;
                 gap: 15px;
-            }
-            .header-brand {
-                flex-direction: column;
             }
         }
 
@@ -424,12 +402,8 @@
 
     <header>
         <div class="header-brand">
-            <!-- Logo de Marquesi -->
-            <img src="logo.jpg" alt="Logo Marquesi" class="header-logo">
-            <div class="header-titles">
-                <h1>MARQUESI <span>| La Rockola Cultural</span></h1>
-                <p>Un mundo de poesía-canción</p>
-            </div>
+            <!-- Logo principal ampliado y limpio -->
+            <img src="logo.jpg" alt="Marquesi - Un mundo de poesía-canción" class="header-logo">
         </div>
         <a href="https://paypal.me/spilimcurso" target="_blank" class="donate-btn">
             ☕ Apoyar Proyecto (PayPal)

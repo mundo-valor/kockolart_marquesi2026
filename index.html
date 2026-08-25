@@ -26,15 +26,16 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 25px;
+            padding: 15px 30px;
             background: var(--card-bg);
             border-bottom: 2px solid var(--accent-red);
-            border-radius: 8px;
+            border-radius: 10px;
             margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
         }
 
         .logo img {
-            height: 45px;
+            height: 48px;
             display: block;
         }
 
@@ -42,31 +43,36 @@
             background-color: var(--accent-red);
             color: white;
             padding: 10px 20px;
-            border-radius: 5px;
+            border-radius: 6px;
             text-decoration: none;
             font-weight: bold;
-            transition: background 0.3s;
+            transition: background 0.3s, transform 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .paypal-btn:hover {
             background-color: #b20710;
+            transform: scale(1.02);
         }
 
-        /* Sección de Reseña / Perfil */
+        /* Sección de Reseña / Perfil optimizada */
         .hero-section {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 20px 25px;
+            border-radius: 10px;
+            padding: 25px 30px;
             margin-bottom: 20px;
             display: flex;
             align-items: center;
             gap: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
         }
 
         .hero-avatar {
-            width: 90px;
-            height: 90px;
+            width: 95px;
+            height: 95px;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid var(--accent-red);
@@ -76,27 +82,34 @@
         .hero-content h3 {
             color: var(--accent-red);
             margin: 0 0 8px 0;
-            font-size: 1.05rem;
+            font-size: 1.1rem;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
         .hero-content p {
             color: var(--text-muted);
-            margin: 0 0 10px 0;
+            margin: 0 0 12px 0;
             font-size: 0.95rem;
             line-height: 1.5;
+        }
+
+        .hero-links {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
         }
 
         .hero-links a {
             color: var(--accent-red);
             text-decoration: none;
             font-weight: 600;
-            margin-right: 15px;
             font-size: 0.9rem;
+            transition: color 0.2s;
         }
 
         .hero-links a:hover {
+            color: #ff3b47;
             text-decoration: underline;
         }
 
@@ -105,15 +118,18 @@
                 flex-direction: column;
                 text-align: center;
             }
+            .hero-links {
+                justify-content: center;
+            }
         }
 
         .container {
             display: grid;
-            grid-template-columns: 320px 1fr;
+            grid-template-columns: 350px 1fr;
             gap: 20px;
         }
 
-        @media (max-width: 900px) {
+        @media (max-width: 1000px) {
             .container {
                 grid-template-columns: 1fr;
             }
@@ -122,16 +138,42 @@
         .sidebar, .main-content {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border-radius: 10px;
             padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
         }
 
         h3 {
             color: var(--accent-red);
-            margin-top: 0;
-            font-size: 1.1rem;
+            margin: 0;
+            font-size: 1.05rem;
             text-transform: uppercase;
             letter-spacing: 1px;
+        }
+
+        .sort-btn {
+            background: #222;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            padding: 4px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .sort-btn:hover {
+            background: var(--accent-red);
+            color: white;
+            border-color: var(--accent-red);
         }
 
         input[type="text"] {
@@ -139,11 +181,11 @@
             padding: 12px;
             background: #222;
             border: 1px solid var(--border-color);
-            border-radius: 5px;
+            border-radius: 6px;
             color: white;
-            font-size: 1rem;
+            font-size: 0.95rem;
             box-sizing: border-box;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         input[type="text"]:focus {
@@ -152,27 +194,36 @@
         }
 
         .counter-badge {
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             color: var(--text-muted);
             margin-bottom: 15px;
             display: block;
         }
 
         .results-list {
-            max-height: 320px;
+            max-height: 300px;
             overflow-y: auto;
             list-style: none;
             padding: 0;
-            margin: 0;
-            margin-bottom: 20px;
+            margin: 0 0 20px 0;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: #121212;
         }
 
         .results-list li {
-            padding: 10px;
+            padding: 10px 12px;
             border-bottom: 1px solid var(--border-color);
             cursor: pointer;
             transition: background 0.2s, color 0.2s;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .results-list li:last-child {
+            border-bottom: none;
         }
 
         .results-list li:hover {
@@ -180,14 +231,29 @@
             color: var(--accent-red);
         }
 
-        /* Controles de Cola de Reproducción */
+        .add-queue-btn {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .add-queue-btn:hover {
+            background: var(--accent-red);
+        }
+
+        /* Cola de Reproducción */
         .queue-box {
             border-top: 1px solid var(--border-color);
             padding-top: 15px;
         }
 
         .queue-title {
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             color: var(--accent-red);
             text-transform: uppercase;
             font-weight: bold;
@@ -197,15 +263,16 @@
         }
 
         .queue-current {
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             color: var(--text-main);
             background: #222;
-            padding: 8px;
-            border-radius: 4px;
+            padding: 8px 10px;
+            border-radius: 6px;
             margin-bottom: 12px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            border: 1px solid var(--border-color);
         }
 
         .queue-controls {
@@ -218,12 +285,12 @@
             background: #222;
             color: white;
             border: 1px solid var(--border-color);
-            padding: 8px;
-            border-radius: 4px;
+            padding: 9px;
+            border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 0.85rem;
-            transition: background 0.2s;
+            font-size: 0.82rem;
+            transition: background 0.2s, border-color 0.2s;
         }
 
         .q-btn:hover {
@@ -240,19 +307,19 @@
             align-items: center;
         }
 
-        /* Reproductor amplio */
+        /* Reproductor amplio de gran presencia visual */
         .video-wrapper {
             position: relative;
             width: 100%;
-            max-width: 900px;
+            max-width: 950px;
             aspect-ratio: 16 / 9;
             background: #000;
-            border-radius: 8px;
+            border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
         }
 
-        iframe {
+        #youtube-player {
             position: absolute;
             top: 0;
             left: 0;
@@ -270,7 +337,7 @@
 </head>
 <body>
 
-    <!-- Header con logo.jpg y PayPal corregido -->
+    <!-- Header -->
     <header>
         <div class="logo">
             <img src="logo.jpg" alt="Marquesi Logo" onerror="this.style.display='none'; document.getElementById('fallback-logo').style.display='block';">
@@ -279,9 +346,9 @@
         <a href="https://paypal.me/spilimcurso" target="_blank" class="paypal-btn" rel="noopener noreferrer">☕ Apoyar Proyecto (PayPal)</a>
     </header>
 
-    <!-- Reseña enriquecida con contacto y YouTube -->
+    <!-- Reseña -->
     <section class="hero-section">
-        <img src="marquesi.jpg" alt="Marquesi" class="hero-avatar" onerror="this.src='https://via.placeholder.com/90?text=M'">
+        <img src="marquesi.jpg" alt="Marquesi" class="hero-avatar" onerror="this.src='https://via.placeholder.com/95?text=M'">
         <div class="hero-content">
             <h3>Sobre el Universo Audiovisual</h3>
             <p><strong>Marquesi, un mundo de poesía-canción</strong> es un universo audiovisual dedicado a descubrir, recordar, celebrar y compartir la riqueza de la música en todas sus expresiones. Nuestro catálogo reúne contenidos sobre grandes artistas nacionales e internacionales, géneros musicales, poesía, canciones, cultura y temas de actualidad.</p>
@@ -293,18 +360,22 @@
     </section>
 
     <div class="container">
-        <!-- Panel Izquierdo: Buscador, Lista Completa A-Z y Cola -->
+        <!-- Panel Izquierdo -->
         <div class="sidebar">
             <h3>🔍 Buscar Producción</h3>
             <input type="text" id="searchInput" placeholder="Ej. Paquito, Osito, Pedro..." oninput="filterTracks()">
             <span id="counterBadge" class="counter-badge">Cargando catálogo...</span>
 
-            <h3>Selección Rápida</h3>
+            <div class="section-header">
+                <h3>Selección Rápida</h3>
+                <button id="sortToggleBtn" class="sort-btn" onclick="toggleSortOrder()">Orden: A-Z</button>
+            </div>
+            
             <ul id="tracksList" class="results-list">
-                <!-- Se llena dinámicamente -->
+                <!-- Dinámico -->
             </ul>
 
-            <!-- Cola de Reproducción Interactiva -->
+            <!-- Cola de Reproducción -->
             <div class="queue-box">
                 <div class="queue-title">
                     <span>🎵 Cola de Reproducción</span>
@@ -314,7 +385,7 @@
                 <div class="queue-controls">
                     <button class="q-btn" onclick="playPrevious()">⏮ Atrás</button>
                     <button class="q-btn" onclick="playNext()">Siguiente ⏭</button>
-                    <button class="q-btn" onclick="playRandom()">▶ Iniciar</button>
+                    <button class="q-btn" onclick="playQueueStart()">▶ Iniciar</button>
                     <button class="q-btn" onclick="resetQueue()">⟲ Resetear</button>
                 </div>
             </div>
@@ -331,38 +402,51 @@
         </div>
     </div>
 
+    <!-- Cargar la API oficial de YouTube IFrame -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+
     <script>
         let allTracks = [];
         let displayedTracks = [];
-        let currentIndex = -1;
+        let playQueue = [];      // Cola personalizada o lista activa
+        let queueIndex = -1;     // Índice actual en la cola de reproducción
+        let isAscending = true;  // Control de orden A-Z / Z-A
+        let ytPlayer = null;     // Instancia del reproductor de YouTube
 
-        // Cargar rockola_data.json asegurando orden alfabético completo A-Z
+        // Cargar archivo JSON
         fetch('rockola_data.json')
             .then(response => {
-                if (!response.ok) {
-                    throw new Error('No se pudo cargar el catálogo.');
-                }
+                if (!response.ok) throw new Error('No se pudo cargar el catálogo.');
                 return response.json();
             })
             .then(data => {
-                // Ordenamiento alfabético robusto (A-Z) de todo el catálogo
-                allTracks = data.sort((a, b) => {
-                    const artistA = (a.artist || "").trim().toLowerCase();
-                    const artistB = (b.artist || "").trim().toLowerCase();
-                    return artistA.localeCompare(artistB);
-                });
-
-                displayedTracks = [...allTracks];
+                allTracks = data;
+                sortAndApplyTracks();
                 document.getElementById('counterBadge').innerText = `Total en catálogo: ${allTracks.length} producciones`;
-                displayTracks(displayedTracks);
             })
             .catch(error => {
-                console.error('Error al cargar el archivo JSON:', error);
+                console.error('Error:', error);
                 document.getElementById('counterBadge').innerText = 'Error al cargar el catálogo.';
                 document.getElementById('tracksList').innerHTML = '<li style="color: #e50914; cursor: default;">Verifica rockola_data.json</li>';
             });
 
-        // Mostrar listado paginado/limitado para rendimiento ágil
+        // Ordenar catálogo completo A-Z o Z-A
+        function toggleSortOrder() {
+            isAscending = !isAscending;
+            document.getElementById('sortToggleBtn').innerText = isAscending ? "Orden: A-Z" : "Orden: Z-A";
+            sortAndApplyTracks();
+        }
+
+        function sortAndApplyTracks() {
+            allTracks.sort((a, b) => {
+                const artistA = (a.artist || "").trim().toLowerCase();
+                const artistB = (b.artist || "").trim().toLowerCase();
+                return isAscending ? artistA.localeCompare(artistB) : artistB.localeCompare(artistA);
+            });
+            filterTracks();
+        }
+
+        // Mostrar listado con botón de añadir a la cola
         function displayTracks(tracks) {
             const listElement = document.getElementById('tracksList');
             listElement.innerHTML = '';
@@ -372,99 +456,149 @@
                 return;
             }
 
-            const limitTracks = tracks.slice(0, 200); // Muestra hasta 200 ordenados alfabéticamente
+            const limitTracks = tracks.slice(0, 250); // Límite eficiente para UI
 
-            limitTracks.forEach((track, index) => {
+            limitTracks.forEach((track) => {
                 const li = document.createElement('li');
-                li.textContent = track.artist;
-                li.onclick = () => selectAndPlay(tracks, index);
+                
+                const spanText = document.createElement('span');
+                spanText.style.flex = "1";
+                spanText.style.cursor = "pointer";
+                spanText.textContent = track.artist;
+                spanText.onclick = () => playSingleTrackNow(track);
+
+                const addBtn = document.createElement('button');
+                addBtn.className = 'add-queue-btn';
+                addBtn.textContent = '+ Añadir';
+                addBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    addToQueue(track);
+                };
+
+                li.appendChild(spanText);
+                li.appendChild(addBtn);
                 listElement.appendChild(li);
             });
         }
 
-        // Búsqueda en tiempo real que barre todo el catálogo
+        // Búsqueda en tiempo real
         function filterTracks() {
             const query = document.getElementById('searchInput').value.toLowerCase().trim();
             
             if (query === "") {
                 displayedTracks = [...allTracks];
-                document.getElementById('counterBadge').innerText = `Total en catálogo: ${allTracks.length} producciones`;
-                displayTracks(displayedTracks);
-                return;
+            } else {
+                displayedTracks = allTracks.filter(track => {
+                    const artistMatch = track.artist && track.artist.toLowerCase().includes(query);
+                    const titleMatch = track.title && track.title.toLowerCase().includes(query);
+                    return artistMatch || titleMatch;
+                });
             }
-
-            displayedTracks = allTracks.filter(track => {
-                const artistMatch = track.artist && track.artist.toLowerCase().includes(query);
-                const titleMatch = track.title && track.title.toLowerCase().includes(query);
-                return artistMatch || titleMatch;
-            });
 
             document.getElementById('counterBadge').innerText = `Encontrados: ${displayedTracks.length} resultados`;
             displayTracks(displayedTracks);
         }
 
-        // Seleccionar y reproducir pista
-        function selectAndPlay(list, index) {
-            currentIndex = index;
-            const track = list[currentIndex];
-            playTrack(track);
+        // Reproducir pista inmediata (y establecerla como cola principal si está vacía)
+        function playSingleTrackNow(track) {
+            playQueue = [track];
+            queueIndex = 0;
+            loadYouTubePlayer(track.id);
+            updateQueueUI();
         }
 
-        function playTrack(track) {
+        // Añadir pista individual a la cola de reproducción
+        function addToQueue(track) {
+            playQueue.push(track);
+            if (queueIndex === -1) {
+                queueIndex = 0;
+                loadYouTubePlayer(playQueue[0].id);
+            }
+            updateQueueUI();
+        }
+
+        // Iniciar reproducción de la cola completa actual
+        function playQueueStart() {
+            if (playQueue.length === 0) {
+                playQueue = [...displayedTracks]; // Si la cola está vacía, toma los filtrados/visibles actuales
+            }
+            if (playQueue.length > 0) {
+                queueIndex = 0;
+                loadYouTubePlayer(playQueue[queueIndex].id);
+                updateQueueUI();
+            }
+        }
+
+        // Cargar o cambiar video usando la API de YouTube
+        function loadYouTubePlayer(videoId) {
             const playerArea = document.getElementById('playerArea');
-            playerArea.innerHTML = '';
-
-            const wrapper = document.createElement('div');
-            wrapper.className = 'video-wrapper';
-
-            const iframe = document.createElement('iframe');
-            iframe.src = `https://www.youtube.com/embed/${track.id}?autoplay=1`;
-            iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
-            iframe.setAttribute('allowfullscreen', 'true');
-
-            wrapper.appendChild(iframe);
-            playerArea.appendChild(wrapper);
-
-            // Actualizar panel inferior de cola
-            document.getElementById('currentPlayingIndicator').textContent = track.artist;
-            document.getElementById('queueCount').textContent = `${displayedTracks.length} en fila`;
+            
+            if (!ytPlayer) {
+                playerArea.innerHTML = `
+                    <div class="video-wrapper">
+                        <div id="youtube-player"></div>
+                    </div>
+                `;
+                ytPlayer = new YT.Player('youtube-player', {
+                    videoId: videoId,
+                    playerVars: { 'autoplay': 1, 'controls': 1, 'rel': 0 },
+                    events: {
+                        'onStateChange': onPlayerStateChange
+                    }
+                });
+            } else {
+                ytPlayer.loadVideoById(videoId);
+            }
         }
 
-        // Controles de la cola
+        // Evento cuando un video termina (estado 0) -> Pasa automáticamente al siguiente
+        function onPlayerStateChange(event) {
+            if (event.data === YT.PlayerState.ENDED) {
+                playNext();
+            }
+        }
+
+        // Controles de navegación en la cola
         function playNext() {
-            if (displayedTracks.length === 0) return;
-            currentIndex = (currentIndex + 1) % displayedTracks.length;
-            selectAndPlay(displayedTracks, currentIndex);
+            if (playQueue.length === 0) return;
+            queueIndex = (queueIndex + 1) % playQueue.length;
+            loadYouTubePlayer(playQueue[queueIndex].id);
+            updateQueueUI();
         }
 
         function playPrevious() {
-            if (displayedTracks.length === 0) return;
-            currentIndex = (currentIndex - 1 + displayedTracks.length) % displayedTracks.length;
-            selectAndPlay(displayedTracks, currentIndex);
-        }
-
-        function playRandom() {
-            if (displayedTracks.length === 0) return;
-            currentIndex = Math.floor(Math.random() * displayedTracks.length);
-            selectAndPlay(displayedTracks, currentIndex);
+            if (playQueue.length === 0) return;
+            queueIndex = (queueIndex - 1 + playQueue.length) % playQueue.length;
+            loadYouTubePlayer(playQueue[queueIndex].id);
+            updateQueueUI();
         }
 
         function resetQueue() {
-            currentIndex = -1;
+            playQueue = [];
+            queueIndex = -1;
+            if (ytPlayer && typeof ytPlayer.stopVideo === 'function') {
+                ytPlayer.stopVideo();
+            }
             document.getElementById('searchInput').value = '';
-            displayedTracks = [...allTracks];
-            displayTracks(displayedTracks);
-            document.getElementById('counterBadge').innerText = `Total en catálogo: ${allTracks.length} producciones`;
-            document.getElementById('currentPlayingIndicator').textContent = 'Ninguna producción seleccionada';
-            document.getElementById('queueCount').textContent = `${allTracks.length} en fila`;
+            sortAndApplyTracks();
+            updateQueueUI();
             
-            // Restaurar pantalla de bienvenida
             document.getElementById('playerArea').innerHTML = `
                 <div style="text-align: center; padding: 40px;">
                     <h2 style="color: var(--text-main); margin-bottom: 10px;">La Rockola de Marquesi</h2>
                     <p class="welcome-msg">Selecciona una producción de la izquierda para comenzar a reproducir.</p>
                 </div>
             `;
+        }
+
+        function updateQueueUI() {
+            const count = playQueue.length;
+            document.getElementById('queueCount').textContent = `${count} en fila`;
+            if (queueIndex >= 0 && playQueue[queueIndex]) {
+                document.getElementById('currentPlayingIndicator').textContent = playQueue[queueIndex].artist;
+            } else {
+                document.getElementById('currentPlayingIndicator').textContent = 'Ninguna producción seleccionada';
+            }
         }
     </script>
 </body>

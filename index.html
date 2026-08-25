@@ -213,7 +213,6 @@
             background: #121212;
         }
 
-        /* Personalización de la barra cursora (scroll) para navegadores modernos */
         .results-list::-webkit-scrollbar, .queue-list::-webkit-scrollbar {
             width: 8px;
         }
@@ -486,7 +485,7 @@
                 spanText.style.flex = "1";
                 spanText.style.cursor = "pointer";
                 spanText.textContent = track.artist;
-                // Clic directo reproduce de inmediato sin tocar la cola principal si está inactiva
+                // Clic directo ahora añade a la cola y reproduce de inmediato si no hay cola previa
                 spanText.onclick = () => playDirect(track);
 
                 const addBtn = document.createElement('button');
@@ -523,13 +522,16 @@
 
         // Reproducir una canción directamente al hacer clic en su nombre
         function playDirect(track) {
-            // Verificamos si ya está en la cola para sincronizar el índice, si no, la insertamos temporalmente
+            // Si la cola está vacía, inicializamos con los elementos filtrados actuales para que "Atrás/Siguiente" funcionen con la lista visible
+            if (playQueue.length === 0) {
+                playQueue = [...displayedTracks];
+            }
             let existingIdx = playQueue.findIndex(t => t.id === track.id);
             if (existingIdx !== -1) {
                 queueIndex = existingIdx;
             } else {
-                playQueue.push(track);
-                queueIndex = playQueue.length - 1;
+                playQueue.unshift(track);
+                queueIndex = 0;
             }
             loadYouTubePlayer(track.id);
             updateQueueUI();
@@ -545,7 +547,7 @@
             updateQueueUI();
         }
 
-        // Iniciar reproducción de la cola completa acumulada
+        // Iniciar reproducción de la cola completa acumulada o de los elementos visibles
         function playQueueStart() {
             if (playQueue.length === 0) {
                 playQueue = [...displayedTracks];
@@ -606,8 +608,11 @@
             playQueue = [];
             queueIndex = -1;
             if (ytPlayer && typeof ytPlayer.stopVideo === 'function') {
-                ytPlayer.stopVideo();
+                try {
+                    ytPlayer.stopVideo();
+                } catch(e) {}
             }
+            ytPlayer = null; // Limpiamos la instancia para evitar bloqueos al reiniciar
             document.getElementById('searchInput').value = '';
             sortAndApplyTracks();
             updateQueueUI();

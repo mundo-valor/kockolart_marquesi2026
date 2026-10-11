@@ -383,12 +383,19 @@
 
             <div class="section-header">
                 <h3>Selección Rápida</h3>
-                <button id="sortToggleBtn" class="sort-btn" onclick="toggleSortOrder()">Orden: A-Z</button>
+                <select id="sortSelect" class="sort-btn" onchange="changeSort()" title="Ordenar">
+                    <option value="artist-asc" selected>Artista A-Z</option>
+                    <option value="artist-desc">Artista Z-A</option>
+                    <option value="date-desc">Más recientes</option>
+                    <option value="date-asc">Más antiguos</option>
+                    <option value="title-asc">Título A-Z</option>
+                </select>
             </div>
             
             <ul id="tracksList" class="results-list">
                 <!-- Dinámico -->
             </ul>
+            <button id="moreBtn" class="q-btn" style="display:none; width:100%; margin-top:8px;" onclick="showMore()">Ver más</button>
 
             <!-- Cola de Reproducción Interactiva con Scroll y Barra Cursora -->
             <div class="queue-box">
@@ -430,7 +437,12 @@
         let displayedTracks = [];
         let playQueue = [];      // Cola de reproducción activa
         let queueIndex = -1;     // Índice actual en la cola
-        let isAscending = true;  // true = A-Z, false = Z-A
+        let sortMode = 'artist-asc';
+        const PAGE_SIZE = 100;   // elementos que se muestran por tanda
+        let visibleCount = PAGE_SIZE;
+        let errorStreak = 0;     // videos seguidos con error (evita bucles)
+
+        const norm = s => (s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
         let ytPlayer = null;     // Instancia del reproductor
 
         // Cargar archivo JSON
@@ -442,7 +454,7 @@
             .then(data => {
                 allTracks = data;
                 sortAndApplyTracks();
-                document.getElementById('counterBadge').innerText = `Total en catálogo: ${allTracks.length} producciones`;
+                document.getElementById('counterBadge').innerText = `Encontrados: ${allTracks.length} de ${allTracks.length}`;
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -450,18 +462,23 @@
                 document.getElementById('tracksList').innerHTML = '<li style="color: #e50914; cursor: default;">Verifica rockola_data.json</li>';
             });
 
-        // Alternar orden A-Z / Z-A
-        function toggleSortOrder() {
-            isAscending = !isAscending;
-            document.getElementById('sortToggleBtn').innerText = isAscending ? "Orden: A-Z" : "Orden: Z-A";
+        // Orden (artista, fecha o título)
+        function changeSort() {
+            sortMode = document.getElementById('sortSelect').value;
             sortAndApplyTracks();
         }
 
         function sortAndApplyTracks() {
+            const cmp = (a, b, k) => (a[k] || "").trim().localeCompare((b[k] || "").trim(), 'es', { numeric: true, sensitivity: 'base' });
+            const dt = t => Date.parse(t.published_at) || 0;
             allTracks.sort((a, b) => {
-                const artistA = (a.artist || "").trim().toLowerCase();
-                const artistB = (b.artist || "").trim().toLowerCase();
-                return isAscending ? artistA.localeCompare(artistB) : artistB.localeCompare(artistA);
+                switch (sortMode) {
+                    case 'artist-desc': return cmp(b, a, 'artist');
+                    case 'date-desc':   return dt(b) - dt(a);
+                    case 'date-asc':    return dt(a) - dt(b);
+                    case 'title-asc':   return cmp(a, b, 'title');
+                    default:            return cmp(a, b, 'artist') || cmp(a, b, 'title');
+                }
             });
             filterTracks();
         }
@@ -476,7 +493,10 @@
                 return;
             }
 
-            const limitTracks = tracks.slice(0, 300);
+            const limitTracks = tracks.slice(0, visibleCount);
+            const more = document.getElementById('moreBtn');
+            more.style.display = tracks.length > visibleCount ? 'block' : 'none';
+            more.textContent = `Ver más (${Math.min(PAGE_SIZE, tracks.length - visibleCount)} de ${tracks.length - visibleCount} restantes)`;
 
             limitTracks.forEach((track) => {
                 const li = document.createElement('li');
@@ -485,6 +505,12 @@
                 spanText.style.flex = "1";
                 spanText.style.cursor = "pointer";
                 spanText.textContent = track.artist;
+                if (track.title && track.title.trim() !== (track.artist || "").trim()) {
+                    const small = document.createElement('small');
+                    small.style.cssText = 'display:block; color:var(--text-muted); font-size:0.8rem;';
+                    small.textContent = track.title;
+                    spanText.appendChild(small);
+                }
                 // Clic directo ahora añade a la cola y reproduce de inmediato si no hay cola previa
                 spanText.onclick = () => playDirect(track);
 
@@ -502,21 +528,27 @@
             });
         }
 
-        // Búsqueda en tiempo real
+        function showMore() {
+            visibleCount += PAGE_SIZE;
+            displayTracks(displayedTracks);
+        }
+
+        // Búsqueda en tiempo real (sin distinguir mayúsculas ni tildes)
         function filterTracks() {
-            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            visibleCount = PAGE_SIZE;
+            const query = norm(document.getElementById('searchInput').value).trim();
             
             if (query === "") {
                 displayedTracks = [...allTracks];
             } else {
                 displayedTracks = allTracks.filter(track => {
-                    const artistMatch = track.artist && track.artist.toLowerCase().includes(query);
-                    const titleMatch = track.title && track.title.toLowerCase().includes(query);
+                    const artistMatch = track.artist && norm(track.artist).includes(query);
+                    const titleMatch = track.title && norm(track.title).includes(query);
                     return artistMatch || titleMatch;
                 });
             }
 
-            document.getElementById('counterBadge').innerText = `Encontrados: ${displayedTracks.length} resultados`;
+            document.getElementById('counterBadge').innerText = `Encontrados: ${displayedTracks.length} de ${allTracks.length}`;
             displayTracks(displayedTracks);
         }
 
@@ -573,7 +605,8 @@
                     videoId: videoId,
                     playerVars: { 'autoplay': 1, 'controls': 1, 'rel': 0 },
                     events: {
-                        'onStateChange': onPlayerStateChange
+                        'onStateChange': onPlayerStateChange,
+                        'onError': onPlayerError
                     }
                 });
             } else {
@@ -583,7 +616,14 @@
         }
 
         // Cuando el video finaliza (estado 0), pasa automáticamente al siguiente
+        // Si un video no se puede reproducir (eliminado, restringido), pasa al siguiente
+        function onPlayerError() {
+            errorStreak++;
+            if (playQueue.length > 1 && errorStreak < playQueue.length) playNext();
+        }
+
         function onPlayerStateChange(event) {
+            if (event.data === YT.PlayerState.PLAYING) errorStreak = 0;
             if (event.data === YT.PlayerState.ENDED) {
                 playNext();
             }
